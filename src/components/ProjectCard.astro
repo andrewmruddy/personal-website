@@ -1,0 +1,224 @@
+---
+import type { MediaValue } from "emdash";
+import { Image } from "emdash/ui";
+
+interface Props {
+	title: string;
+	summary?: string;
+	featuredImage: MediaValue | string;
+	href: string;
+	client?: string;
+	year?: string;
+	categories?: string[];
+	tags?: string[];
+}
+
+const { title, summary, featuredImage, href, client, year, categories, tags } =
+	Astro.props;
+// Combine categories and tags for display
+const allTags = [...(categories || []), ...(tags || [])];
+---
+
+<article class="project-card">
+	<a href={href} class="card-link">
+		<div class="card-image">
+			<Image image={featuredImage} />
+			<div class="card-overlay">
+				<span class="card-view">View Project</span>
+			</div>
+		</div>
+		<div class="card-content">
+			<h2 class="card-title">{title}</h2>
+			<div class="card-meta">
+				{client && <span class="card-client">{client}</span>}
+				{client && year && <span class="card-separator">·</span>}
+				{year && <span class="card-year">{year}</span>}
+			</div>
+			{summary && <p class="card-summary">{summary}</p>}
+			{
+				allTags.length > 0 && (
+					<div class="card-categories">
+						{allTags.map((tag) => (
+							<span class="card-category">{tag}</span>
+						))}
+					</div>
+				)
+			}
+		</div>
+	</a>
+</article>
+
+<style>
+	.project-card {
+		position: relative;
+		background: var(--color-surface, #fffdf8);
+		border: 3px solid var(--color-border, #111111);
+		border-radius: 0;
+		box-shadow: var(--shadow-offset, 8px) var(--shadow-offset, 8px) 0
+			var(--color-shadow, #111111);
+		overflow: hidden;
+		transition:
+			transform var(--transition-fast, 150ms ease),
+			box-shadow var(--transition-fast, 150ms ease);
+	}
+
+	.card-link {
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.card-image {
+		position: relative;
+		overflow: hidden;
+		border-bottom: 3px solid var(--color-border, #111111);
+		background: var(--color-surface-alt, #ffd34d);
+	}
+
+	.card-image img {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		mix-blend-mode: multiply;
+		filter: saturate(0.95) contrast(1.05);
+		transition:
+			transform var(--transition-slow, 300ms ease),
+			filter var(--transition-fast, 150ms ease);
+	}
+
+	.card-overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		padding: var(--spacing-md, 1rem);
+		background: transparent;
+	}
+
+	.card-view {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-family: var(--font-mono, monospace);
+		font-size: 0.78rem;
+		font-weight: 500;
+		color: var(--color-text, #111111);
+		background: var(--color-success, #9bf266);
+		padding: 0.45rem 0.7rem;
+		border: 3px solid var(--color-border, #111111);
+		border-radius: 0;
+		box-shadow: 4px 4px 0 var(--color-shadow, #111111);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		transition:
+			transform var(--transition-fast, 150ms ease),
+			box-shadow var(--transition-fast, 150ms ease),
+			background var(--transition-fast, 150ms ease);
+	}
+
+	.card-view::after {
+		content: "->";
+	}
+
+	.card-content {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-sm, 0.5rem);
+		padding: var(--spacing-lg, 1.5rem);
+		background: var(--color-surface, #fffdf8);
+	}
+
+	.card-title {
+		font-family: var(--font-serif, Impact, sans-serif);
+		font-size: clamp(1.5rem, 2.4vw, 2rem);
+		font-weight: 400;
+		line-height: 0.95;
+		text-transform: uppercase;
+		text-wrap: balance;
+		transition:
+			color var(--transition-fast, 150ms ease),
+			transform var(--transition-fast, 150ms ease);
+	}
+
+	.card-meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem;
+		font-size: 0.76rem;
+		color: var(--color-text, #111111);
+		font-family: var(--font-mono, monospace);
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		font-weight: 500;
+	}
+
+	.card-client,
+	.card-year {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.3rem 0.55rem;
+		border: 2px solid var(--color-border, #111111);
+		border-radius: 0;
+		background: var(--color-accent-muted, #77d3f7);
+	}
+
+	.card-separator {
+		font-size: 1rem;
+		line-height: 1;
+	}
+
+	.card-summary {
+		font-size: var(--font-size-sm, 0.875rem);
+		color: var(--color-muted, #50483f);
+		line-height: 1.55;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.card-categories {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacing-sm, 0.5rem);
+		margin-top: var(--spacing-sm, 0.5rem);
+	}
+
+	.card-category {
+		font-size: 0.72rem;
+		font-family: var(--font-mono, monospace);
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--color-text, #111111);
+		padding: 0.35rem 0.55rem;
+		border: 2px solid var(--color-border, #111111);
+		border-radius: 0;
+		background: var(--color-surface-alt, #ffd34d);
+		box-shadow: 3px 3px 0 var(--color-shadow, #111111);
+	}
+
+	.project-card:hover {
+		transform: translate(4px, 4px) rotate(-0.3deg);
+		box-shadow: 4px 4px 0 var(--color-shadow, #111111);
+	}
+
+	.project-card:hover .card-image img {
+		transform: scale(1.04);
+		filter: saturate(1.05) contrast(1.08);
+	}
+
+	.project-card:hover .card-title {
+		color: var(--color-accent, #ff7a93);
+		transform: translateX(3px);
+	}
+
+	.project-card:hover .card-view {
+		background: var(--color-accent, #ff7a93);
+		box-shadow: 2px 2px 0 var(--color-shadow, #111111);
+		transform: translate(2px, 2px);
+	}
+</style>

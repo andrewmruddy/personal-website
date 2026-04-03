@@ -1,0 +1,36 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "andrewruddy-com",
+	"main": "./src/worker.ts",
+	"compatibility_date": "2026-03-29",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"vars": {
+		"MAILGUN_DOMAIN": "andrewruddy.com",
+		"MAILGUN_TO_EMAIL": "andrewmruddy@gmail.com",
+		"MAILGUN_REGION": "us"
+	},
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS"
+	},
+	"d1_databases": [
+		{
+			"binding": "db",
+			"database_name": "andrewruddy-com",
+			"database_id": "61dba1a4-5f8f-4cfa-8e1b-76878a6e61de",
+			"remote": true
+		},
+	],
+	"r2_buckets": [
+		{
+			"bucket_name": "andrewruddy-com-media",
+			"binding": "media",
+			"remote": true
+		},
+	],
+	"observability": {
+		"enabled": true,
+	}
+}
